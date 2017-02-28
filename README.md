@@ -1,9 +1,11 @@
-# External SVG Sprite
+# webpack-svg-icon-system
 
-[![npm version](https://badge.fury.io/js/external-svg-sprite-loader.svg)](https://badge.fury.io/js/external-svg-sprite-loader)
-[![Build Status](https://travis-ci.org/Karify/external-svg-sprite-loader.svg?branch=master)](https://travis-ci.org/Karify/external-svg-sprite-loader)
+[![npm version](https://badge.fury.io/js/webpack-svg-icon-system.svg)](https://badge.fury.io/js/webpack-svg-icon-system)
+[![Build Status](https://travis-ci.org/stowball/webpack-svg-icon-system.svg?branch=master)](https://travis-ci.org/stowball/webpack-svg-icon-system)
 
 A loader and plugin for webpack that converts all your SVGs into symbols and merges them into a SVG sprite.
+
+This is a simpler fork of [Karify's external-svg-sprite-loader](https://github.com/Karify/external-svg-sprite-loader).
 
 ## Requirements
 
@@ -14,7 +16,7 @@ To make it work in older browsers, like Internet Explorer, you will also need [S
 ## Installation
 
 ```bash
-npm i external-svg-sprite-loader
+npm i webpack-svg-icon-system
 ```
 
 ## Options
@@ -22,7 +24,8 @@ npm i external-svg-sprite-loader
 ### Loader options
 
 - `name` - relative path to the sprite file (default: `img/sprite.svg`). The `[hash]` placeholder is supported.
-- `prefix` - value to be prefixed to the icons name (default: `icon`).
+- `prefix` - value to be prefixed to the icon's name (default: `icon`).
+- `suffix` - value to be suffixed to the icon's name (default: `''`). The `[hash]` placeholder is supported.
 - `svgoOptions` - custom options to be passed to svgo.
 
 ### Plugin options
@@ -37,14 +40,17 @@ If you have the following webpack configuration:
 // webpack.config.js
 
 import path from 'path';
-import SvgStorePlugin from 'external-svg-sprite-loader/lib/SvgStorePlugin';
+import SvgStorePlugin from 'webpack-svg-icon-system/lib/SvgStorePlugin';
 
 module.exports = {
     module: {
         rules: [
             {
-                loader: 'external-svg-sprite-loader',
+                loader: 'webpack-svg-icon-system',
                 test: /\.svg$/,
+                options: {
+                  // override default options
+                },
             },
         ],
     },
@@ -59,57 +65,60 @@ module.exports = {
 ```
 
 You will be able to import your SVG files in your JavaScript files as shown below.
-The imported SVG will always correspond to a JavaScript object with keys `symbol`, `view` and `viewBox`:
+The imported SVG will always correspond to a JavaScript object with keys `symbol`, and `viewBox`:
 - The `symbol` url can be used on a `<use>` tag to display the icon;
-- The `view` url is supposed to be used in CSS;
 - The `viewBox` value is required by some browsers on the `<svg>` tag.
 
 The URLs will have the following format:
 - `symbol`: `webpackConfig.output.publicPath`/`loader.name`#`loader.prefix`-`your-svg-file-name`-`icon-file-hash`
-- `view`: `webpackConfig.output.publicPath`/`loader.name`#view-`loader.prefix`-`your-svg-file-name`-`icon-file-hash`
+
+### Add your sprite to the DOM
 
 ```js
-/*
- * {
- *  symbol: '/public/img/sprite.svg#icon-logo',
- *  view: '/public/img/sprite.svg#view-icon-logo',
- *  viewBox: '0 0 150 100'
- * }
- */
-import logo from './images/logo.svg';
+(function(path, baseUrl) {
+  var id = 'svg';
+  var xhr = new XMLHttpRequest;
+  var body = document.body;
+  var div = document.createElement('div');
+  var base = baseUrl || window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+  var url = base + path;
 
-class {
-
-    render() {
-        return (
-            <svg viewBox={logo.viewBox}>
-                <use xlinkHref={logo.symbol} />
-            </svg>
-        );
+  if (div.id = id, body.insertBefore(div, body.childNodes[0]), 'withCredentials' in xhr) {
+    xhr.withCredentials;
+    xhr.open('GET', url, true);
+  }
+  else {
+    if (typeof XDomainRequest == 'undefined') {
+      return void(body.className += ' no-svg');
     }
-    
-}
+
+    xhr = new XDomainRequest;
+    xhr.open('GET', url);
+  }
+
+  xhr.onload = function() {
+    div.className = 'u-visually-hidden';
+    div.innerHTML = xhr.responseText;
+  };
+
+  xhr.onerror = function() {
+    body.className += ' no-svg';
+  };
+
+  setTimeout(function() {
+    xhr.send();
+  }, 0);
+})('/img/sprite.svg');
 ```
 
-In CSS files, you can import your SVG files as shown bellow (assuming you are using the [ExtractTextPlugin](https://github.com/webpack/extract-text-webpack-plugin)).
-The imported value will be converted into the `view` url shown above.
+### <use> in your markup
 
-```css
-.special-icon {
-    /* the url will be replaced with the url to the sprite */
-    background-image: url('./icons/special.svg') no-repeat 0; 
-}
+```html
+<svg role="img">
+  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-{{ name }}"/>
+</svg>
+
 ```
-
-## Examples
-
-You can find working examples in the `examples` folder. To test them under the example folder run:
-
-`npm install`
-
-`npm start`
-
-And then you can see the result in `http://localhost:3000`.
 
 ## Contributing
 
@@ -127,6 +136,7 @@ Here are a few rules to follow in order to ease code reviews, and discussions be
 
 Thank you!
 
-## License
+---
 
-MIT (http://www.opensource.org/licenses/mit-license.php)
+Copyright (c) 2017 [Matt Stow](http://mattstow.com)  
+Licensed under the MIT license *(see [LICENSE](https://github.com/stowball/react-accessible-tabs/blob/master/LICENSE) for details)*

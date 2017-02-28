@@ -1,13 +1,13 @@
 {
   "author": {
-    "name": "Karify B.V.",
-    "email": "questions@karify.com",
-    "url": "https://www.karify.com"
+    "name": "Matt Stow",
+    "email": "questions@stowball.com",
+    "url": "https://www.stowball.com"
   },
   "contributors": [
     {
       "name": "Bruno Sampaio",
-      "email": "bruno.sampaio@karify.com",
+      "email": "bruno.sampaio@stowball.com",
       "url": "http://bensampaio.github.io/"
     }
   ],
@@ -17,10 +17,9 @@
     "imagemin-svgo": "^5.1.0",
     "loader-utils": "^1.0.2"
   },
-  "description": "A webpack loader and plugin that generate SVG sprites out of a collection of SVG files used in your JS and CSS files",
+  "description": "A webpack loader and plugin that generate SVG sprites out of a collection of SVG files to be <use>d in your markup",
   "devDependencies": {
-    "eslint": "^3.2.2",
-    "eslint-plugin-react": "^6.8.0"
+    "eslint": "^3.2.2"
   },
   "engines": {
     "node": ">=6.2.0",
@@ -37,13 +36,13 @@
   ],
   "license": "MIT",
   "main": "index.js",
-  "name": "external-svg-sprite-loader",
+  "name": "webpack-svg-icon-system",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Karify/external-svg-sprite-loader.git"
+    "url": "http://github.com/stowball/webpack-svg-icon-system.git"
   },
   "scripts": {
-    "lint": "eslint index.js lib examples --ext=js,jsx"
+    "lint": "eslint index.js lib"
   },
-  "version": "2.1.1"
+  "version": "0.1.0"
 }
