@@ -35,7 +35,7 @@ const DEFAULT_QUERY_VALUES = {
  * @param {Buffer} content - the content of the SVG file.
  */
 function loader(content) {
-    const { addDependency, cacheable, resourcePath, options: { output: { publicPath } } } = this;
+    const { addDependency, cacheable, resourcePath } = this;
 
     // Get callback because the SVG is going to be optimized and that is an async operation
     const callback = this.async();
@@ -63,16 +63,9 @@ function loader(content) {
             const suffix = query.suffix === '[hash]' ? hash : query.suffix;
 
             // Register the sprite and icon
-            const icon = SvgStorePlugin.getSprite(query.name).addIcon(resourcePath, query.prefix, suffix, content.toString());
+            SvgStorePlugin.getSprite(query.name).addIcon(resourcePath, query.prefix, suffix, content.toString());
 
-            // Export the icon as a metadata object that contains urls to be used on an <img/> in HTML or url() in CSS
-            callback(
-                null,
-                `module.exports = {
-                    symbol: '${icon.getUrlToSymbol(publicPath)}',
-                    viewBox: '${icon.getDocument().getViewBox()}'
-                };`
-            );
+            callback(null, '');
         })
         .catch((err) => {
             callback(err);

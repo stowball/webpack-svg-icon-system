@@ -34,6 +34,8 @@ npm i webpack-svg-icon-system
 
 ## Usage
 
+### Configure
+
 If you have the following webpack configuration:
 
 ```js
@@ -64,13 +66,14 @@ module.exports = {
 };
 ```
 
-You will be able to import your SVG files in your JavaScript files as shown below.
-The imported SVG will always correspond to a JavaScript object with keys `symbol`, and `viewBox`:
-- The `symbol` url can be used on a `<use>` tag to display the icon;
-- The `viewBox` value is required by some browsers on the `<svg>` tag.
+### Import the SVGs
 
-The URLs will have the following format:
-- `symbol`: `webpackConfig.output.publicPath`/`loader.name`#`loader.prefix`-`your-svg-file-name`-`icon-file-hash`
+Import (export) the SVGs you wish to combine in to the sprite in your JavaScript like so:
+
+```js
+export logoFacebook from './assets/svg/icons/logo-facebook.svg';
+export logoInstagram from './assets/svg/icons/logo-instagram.svg';
+```
 
 ### Add your sprite to the DOM
 
