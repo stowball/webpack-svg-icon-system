@@ -44,5 +44,5 @@
   "scripts": {
     "lint": "eslint index.js lib"
   },
-  "version": "0.3.3"
+  "version": "0.3.4"
 }
